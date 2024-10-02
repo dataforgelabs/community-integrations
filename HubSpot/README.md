@@ -13,7 +13,8 @@ To run the integration, you need to have a private app in HubSpot and an access 
 ## Installation
 ### Databricks
 Set up a git folder in your Databricks workspace attached to your DataForge workspace pointing to this repository. Copy the notebook directory path out to be used in DataForge below.
-Install and use the Databricks CLI to create a scope and secret to store your HubSpot access token.
+
+Install and use the Databricks CLI to create a scope and secret to store your HubSpot access token. The integration assumes a databricks secret exists with scope named "hubspot" and secret named "access_token".
 
 ## DataForge setup
 ### Cluster configuration
@@ -26,22 +27,39 @@ Set your custom parameters in the Parameters->Ingestion section of the source se
 
 ### Custom parameters
 The following custom parameters are available for you to use with this integration. Some objects do not support the use of 
-| Custom Parameter | Required | Definition |
-|-----|-----|-----|
-| hubspot_object | yes | Identifies the object to pull data for. 
-| limit | no | Record limit for each page request. Default limit is set to 50.
-| include_all_properties | no | Include all properties available for the object type.
-| properties | no | Provide a list of property names to return.
-| properties_with_history | no | Provide a list of property names to return with history of the property values.
-| archived | no | Identify whether to pull only archived records or un-archived records.
-| get_pipelines | no | Return all pipelines of the object rather than the object data. Example would be pulling all pipelines of the deals object.
-| get_properties | no | Return all properties of the object rather than the object data. Example is pulling all properties of the deals object.
-| flatten_properties_stage_fields | no | Convert all pipeline stage fields to separate columns as ARRAY<STRUCT<>>
-| flatten_properties | no | Convert all properties fields to separate columns
+| Custom Parameter | Required | Definition | Example |
+|-----|-----|-----|-----|
+| hubspot_object | yes | Identifies the object to pull data for. | "deals"
+| limit | no | Record limit for each page request. Default limit is set to 50. | 25
+| include_all_properties | no | Include all properties available for the object type. | true
+| properties | no | Provide a list of property names to return. | ["amount,dealname"]
+| properties_with_history | no | Provide a list of property names to return with history of the property values. | ["amount,dealname"]
+| archived | no | Identify whether to pull only archived records or un-archived records. | false
+| get_pipelines | no | Return all pipelines of the object rather than the object data. Example would be pulling all pipelines of the deals object. | true
+| get_properties | no | Return all properties of the object rather than the object data. Example is pulling all properties of the deals object. | true
+| flatten_properties_stage_fields | no | Convert all pipeline stage fields to separate columns as ARRAY<STRUCT<>> | false
+| flatten_properties | no | Convert all properties fields to separate columns | true
 
 The HubSpot object data is returned in the form of a struct of Properties with sub-fields in the struct for each property of the object. Utilize the flatten_properties custom parameter to flatten the data into separate columns for every property.
 
 For objects that have pipelines (deals and tickets), the properties fields that are returned are duplicated for every stage of a pipeline (e.g. hs_date_entered shows up with hs_date_entered_203523623 and hs_date_entered_203523624). To make the data easier to work with, utilize the flatten_properties_stage_fields to separate these fields into separate columns as ARRAY<STRUCT<>>. This easily enables you to use the sub-source feature in DataForge.
+
+_Usage examples:_
+```json
+{"hubspot_object":"deals","flatten_properties":true,"include_all_properties":true}
+```
+```json
+{"hubspot_object":"contacts","flatten_properties_stage_fields":true}
+```
+```json
+{"hubspot_object":"deals","get_pipelines":true}
+```
+```json
+{"hubspot_object":"deals","get_properties":true}
+```
+```json
+{"hubspot_object":"owners"}
+```
 
 ## Contributing
 We've made every effort to support all the HubSpot CRM objects and parameters available. However, contributions are always welcome! 
