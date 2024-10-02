@@ -46,10 +46,10 @@ For objects that have pipelines (deals and tickets), the properties fields that 
 
 _Usage examples:_
 ```json
-{"hubspot_object":"deals","flatten_properties":true,"include_all_properties":true}
+{"hubspot_object":"deals","properties":["amount,dealname"],"flatten_properties":true}
 ```
 ```json
-{"hubspot_object":"contacts","flatten_properties_stage_fields":true}
+{"hubspot_object":"contacts","limit":100,"archived":false,"flatten_properties":true,"include_all_properties":true}
 ```
 ```json
 {"hubspot_object":"deals","get_pipelines":true}
