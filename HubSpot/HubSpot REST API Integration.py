@@ -337,7 +337,8 @@ elif get_pipelines:
     object_results = get_data(pipeline_url, access_token, params=None)
 
     if object_results:
-        final_df = spark.createDataFrame(object_results)
+        rd = spark.sparkContext.parallelize(object_results).map(lambda x: json.dumps(x))
+        final_df = spark.read.json(rd)
     else:
         final_df = empty_df
 
