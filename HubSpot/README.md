@@ -14,16 +14,19 @@ To run the integration, you need to have a private app in HubSpot and an access 
 ### Databricks
 Set up a git folder in your Databricks workspace attached to your DataForge workspace pointing to this repository. Copy the notebook directory path out to be used in DataForge below.
 
-Install and use the Databricks CLI to create a scope and secret to store your HubSpot access token. The integration assumes a databricks secret exists with scope named "hubspot" and secret named "access_token".
-
 ## DataForge setup
+### Connection
+Create a connection in your DataForge workspace as a source connection with custom type. Expand the parameters, and enter your access token in the Private Connection Parameters in the following json format: {"access_token":"<token>"}
+
+This integration assumes a connection is attached to your source with a private parameter named "access_token".
+
 ### Cluster configuration
 Create a cluster configuration in your DataForge workspace as a custom notebook config. Paste the notebook directory path into the cluster configuration "Notebook Path" parameter. We recommend using a single node cluster to start unless you know you are working with large data.
 
 ### Source
-Create a source for each HubSpot object you will pull data from. For each source, set the connection type to **Custom** and select your custom notebook cluster configuration in the **Custom Ingest Cluster Config*** parameter.
+Create a source for each HubSpot object you will pull data from. For each source, set the connection type to **Custom**, select your connection in the **Connection** parameter, and select your custom notebook cluster configuration in the **Custom Ingest Cluster Config** parameter.
 
-Set your custom parameters in the Parameters->Ingestion section of the source settings. See below for available custom parameters to use.
+Set your custom parameters in the Parameters->Ingestion section of the source settings in json format. See below for available custom parameters to use.
 
 ### Custom parameters
 The following custom parameters are available for you to use with this integration. Some objects do not support the use of 
